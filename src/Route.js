@@ -6,21 +6,19 @@ function Route({ path, children }) {
   const setState = useState(Symbol())[1];
 
   if (!initRef.current.init) {
+    const doProxify = proxify(() => setState(Symbol()));
     initRef.current.init = true;
-    const callbackSymbol = Symbol();
-    window.history[callbackSymbol] = window.history.pushState;
-    window.history.pushState = (...args) => {
-      window.history[callbackSymbol](...args);
-      // Trigger repaint
-      setState(Symbol());
-    };
+    doProxify("pushState");
+    doProxify("back");
+    doProxify("forward");
+    doProxify("go");
+    doProxify("replaceState");
   }
 
   const [displayed, setDisplayed] = useState(false);
   const [params, setParams] = useState({});
 
   const { pathname: currentPath } = new URL(window.location.href);
-
   useEffect(() => {
     const matchedRoute = match(path, currentPath);
     if (matchedRoute) {
@@ -45,5 +43,14 @@ function extractQueryParams() {
 
   return res;
 }
+
+const proxify = callback => name => {
+  const callbackSymbol = Symbol();
+  window.history[callbackSymbol] = window.history[name];
+  window.history[name] = (...args) => {
+    window.history[callbackSymbol](...args);
+    callback();
+  };
+};
 
 export default Route;
