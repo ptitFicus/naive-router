@@ -25,10 +25,6 @@ test("should display component with correct props when route is matched", () => 
 
   routeTo("/foo/1/test");
 
-  act(() => {
-    window.history.pushState({}, null, "/foo/1/test");
-  });
-
   const testInstance = renderedRoute.root;
   expect(testInstance.findByType(Child).props).toEqual({
     id: "1",
