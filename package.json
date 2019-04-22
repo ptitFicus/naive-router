@@ -1,0 +1,42 @@
+{
+  "name": "naive-router",
+  "version": "1.0.1-beta2",
+  "description": "Naive client-side router for react applications",
+  "main": "dist/naive-router.js",
+  "scripts": {
+    "test": "jest",
+    "build": "NODE_ENV=production rollup -c -o dist/naive-router.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ptitFicus/naive-router.git"
+  },
+  "keywords": [
+    "react",
+    "router",
+    "spa"
+  ],
+  "author": "Benjamin Cavy",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/ptitFicus/naive-router/issues"
+  },
+  "homepage": "https://github.com/ptitFicus/naive-router#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-react": "^7.0.0",
+    "babel-jest": "^24.7.1",
+    "jest": "^24.7.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-test-renderer": "^16.8.6",
+    "rollup": "^1.10.1",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-uglify": "^6.0.2"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0"
+  }
+}
