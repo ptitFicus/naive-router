@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import useUrl from "./useUrl";
-import match from "./matcher";
+import match from "./matcher/index.js";
 
 function Route({ path, children }) {
   const initRef = useRef({ init: false });
