@@ -34,4 +34,4 @@ This libray comes with some pitfalls :
 
 - [x] Route matching
 - [x] Path parameters support
-- [ ] Query parameters support
+- [x] Query parameters support

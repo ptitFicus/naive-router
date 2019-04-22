@@ -22,7 +22,7 @@ function Route({ path, children }) {
     const matchedRoute = match(path, newPath);
     if (matchedRoute) {
       setDisplayed(true);
-      setParams(matchedRoute);
+      setParams({ ...extractQueryParams(), ...matchedRoute });
     } else {
       setDisplayed(false);
     }
@@ -31,6 +31,16 @@ function Route({ path, children }) {
   return displayed
     ? React.Children.map(children, child => React.cloneElement(child, params))
     : null;
+}
+
+function extractQueryParams() {
+  const params = new URLSearchParams(window.location.search);
+  const res = {};
+  for (const [key, value] of params.entries()) {
+    res[key] = value;
+  }
+
+  return res;
 }
 
 export default Route;
