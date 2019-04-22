@@ -69,6 +69,7 @@ function Child() {
 }
 
 function renderRouteWithPath(path) {
+  routeTo("/");
   return TestRenderer.create(
     <Route path={path}>
       <Child />
