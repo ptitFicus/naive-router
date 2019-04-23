@@ -14,7 +14,7 @@ function Route({ path, children }) {
 
   useEffect(() => {
     if (!initRef.current.init) {
-      const doProxify = proxify(() => {
+      const updateCallback = () => {
         const { path, displayed } = initRef.current;
         const { pathname: currentPath } = new URL(window.location.href);
         const matchedRoute = match(path, currentPath);
@@ -24,14 +24,15 @@ function Route({ path, children }) {
         } else if (!matchedRoute && displayed) {
           setDisplayed(false);
         }
-      });
+      };
+      const doProxify = proxify(updateCallback);
       initRef.current.init = true;
       doProxify("pushState");
       doProxify("back");
       doProxify("forward");
       doProxify("go");
       doProxify("replaceState");
-      window.addEventListener("popstate", () => setState(Symbol()));
+      window.addEventListener("popstate", updateCallback);
     }
   }, [initRef.current.init, displayed, path]);
 
