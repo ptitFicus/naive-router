@@ -1,15 +1,4 @@
-import React, { useState, useRef } from 'react';
-
-function useUrl(onChange) {
-  let { pathname: newPath } = new URL(window.location.href);
-
-  const [currentPath, setUrl] = useState(undefined);
-
-  if (newPath !== currentPath) {
-    setUrl(newPath);
-    onChange(newPath);
-  }
-}
+import React, { useRef, useState, useEffect } from 'react';
 
 /**
  * @param  {string} pathPattern pattern to match
@@ -63,29 +52,37 @@ function extractParts(path) {
 
 function Route({ path, children }) {
   const initRef = useRef({ init: false });
-  const useStateResult = useState(Symbol());
-
-  if (!initRef.current.init) {
-    initRef.current.init = true;
-    const callbackSymbol = Symbol();
-    window.history[callbackSymbol] = window.history.pushState;
-    window.history.pushState = (...args) => {
-      window.history[callbackSymbol](...args);
-      useStateResult[1](Symbol());
-    };
-  }
-
+  const [state, setState] = useState(Symbol()); // eslint-disable-line no-unused-vars
   const [displayed, setDisplayed] = useState(false);
   const [params, setParams] = useState({});
-  useUrl(newPath => {
-    const matchedRoute = match(path, newPath);
-    if (matchedRoute) {
-      setDisplayed(true);
-      setParams({ ...extractQueryParams(), ...matchedRoute });
-    } else {
-      setDisplayed(false);
+
+  useEffect(() => {
+    initRef.current.path = path;
+    initRef.current.displayed = displayed;
+  }, [path, displayed]);
+
+  useEffect(() => {
+    if (!initRef.current.init) {
+      const doProxify = proxify(() => {
+        const { path, displayed } = initRef.current;
+        const { pathname: currentPath } = new URL(window.location.href);
+        const matchedRoute = match(path, currentPath);
+        if (matchedRoute && !displayed) {
+          setDisplayed(true);
+          setParams({ ...extractQueryParams(), ...matchedRoute });
+        } else if (!matchedRoute && displayed) {
+          setDisplayed(false);
+        }
+      });
+      initRef.current.init = true;
+      doProxify("pushState");
+      doProxify("back");
+      doProxify("forward");
+      doProxify("go");
+      doProxify("replaceState");
+      window.addEventListener("popstate", () => setState(Symbol()));
     }
-  });
+  }, [initRef.current.init, displayed, path]);
 
   return displayed
     ? React.Children.map(children, child => React.cloneElement(child, params))
@@ -101,5 +98,14 @@ function extractQueryParams() {
 
   return res;
 }
+
+const proxify = callback => name => {
+  const callbackSymbol = Symbol();
+  window.history[callbackSymbol] = window.history[name];
+  window.history[name] = (...args) => {
+    window.history[callbackSymbol](...args);
+    callback();
+  };
+};
 
 export { Route };
