@@ -1,5 +1,7 @@
 # naive-router
 
+[![Build Status](https://travis-ci.com/ptitFicus/naive-router.svg?branch=master)](https://travis-ci.com/ptitFicus/naive-router)
+
 Super naive dependency free router for React
 
 ## Usage
