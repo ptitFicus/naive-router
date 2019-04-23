@@ -3,31 +3,37 @@ import match from "./matcher/index.js";
 
 function Route({ path, children }) {
   const initRef = useRef({ init: false });
-  const setState = useState(Symbol())[1];
-
-  if (!initRef.current.init) {
-    const doProxify = proxify(() => setState(Symbol()));
-    initRef.current.init = true;
-    doProxify("pushState");
-    doProxify("back");
-    doProxify("forward");
-    doProxify("go");
-    doProxify("replaceState");
-  }
-
+  const [state, setState] = useState(Symbol()); // eslint-disable-line no-unused-vars
   const [displayed, setDisplayed] = useState(false);
   const [params, setParams] = useState({});
 
-  const { pathname: currentPath } = new URL(window.location.href);
   useEffect(() => {
-    const matchedRoute = match(path, currentPath);
-    if (matchedRoute) {
-      setDisplayed(true);
-      setParams({ ...extractQueryParams(), ...matchedRoute });
-    } else {
-      setDisplayed(false);
+    initRef.current.path = path;
+    initRef.current.displayed = displayed;
+  }, [path, displayed]);
+
+  useEffect(() => {
+    if (!initRef.current.init) {
+      const doProxify = proxify(() => {
+        const { path, displayed } = initRef.current;
+        const { pathname: currentPath } = new URL(window.location.href);
+        const matchedRoute = match(path, currentPath);
+        if (matchedRoute && !displayed) {
+          setDisplayed(true);
+          setParams({ ...extractQueryParams(), ...matchedRoute });
+        } else if (!matchedRoute && displayed) {
+          setDisplayed(false);
+        }
+      });
+      initRef.current.init = true;
+      doProxify("pushState");
+      doProxify("back");
+      doProxify("forward");
+      doProxify("go");
+      doProxify("replaceState");
+      window.addEventListener("popstate", () => setState(Symbol()));
     }
-  }, [currentPath, path]);
+  }, [initRef.current.init, displayed, path]);
 
   return displayed
     ? React.Children.map(children, child => React.cloneElement(child, params))

@@ -7,8 +7,7 @@ test("should not display component when route is not matched", () => {
 
   routeTo("/bar");
 
-  const testInstance = renderedRoute.root;
-  expect(() => testInstance.findByType(Child)).toThrow();
+  childShouldBeAbsent(renderedRoute);
 });
 
 test("should display component when route is matched", () => {
@@ -16,8 +15,7 @@ test("should display component when route is matched", () => {
 
   routeTo("/foo");
 
-  const testInstance = renderedRoute.root;
-  expect(testInstance.findByType(Child)).toBeTruthy();
+  childShouldBePresent(renderedRoute);
 });
 
 test("should display component with correct props when route is matched", () => {
@@ -25,8 +23,7 @@ test("should display component with correct props when route is matched", () => 
 
   routeTo("/foo/1/test");
 
-  const testInstance = renderedRoute.root;
-  expect(testInstance.findByType(Child).props).toEqual({
+  childShouldHaveProps(renderedRoute, {
     id: "1",
     name: "test"
   });
@@ -37,8 +34,7 @@ test("should pass query paremeters", () => {
 
   routeTo("/foo?id=1");
 
-  const testInstance = renderedRoute.root;
-  expect(testInstance.findByType(Child).props).toEqual({
+  childShouldHaveProps(renderedRoute, {
     id: "1"
   });
 });
@@ -48,10 +44,27 @@ test("path params should prevail over query param ", () => {
 
   routeTo("/foo/bar?id=1");
 
-  const testInstance = renderedRoute.root;
-  expect(testInstance.findByType(Child).props).toEqual({
+  childShouldHaveProps(renderedRoute, {
     id: "bar"
   });
+});
+
+test("should hide component when route is matched then unmatched", () => {
+  const renderedRoute = renderRouteWithPath("/foo");
+
+  routeTo("/foo");
+  childShouldBePresent(renderedRoute);
+  routeTo("/lol");
+  childShouldBeAbsent(renderedRoute);
+});
+
+test("should hide component when route is matched brefore back() is called", () => {
+  const renderedRoute = renderRouteWithPath("/foo");
+
+  routeTo("/lol");
+  childShouldBeAbsent(renderedRoute);
+  routeTo("/foo");
+  childShouldBePresent(renderedRoute);
 });
 
 function routeTo(path) {
@@ -60,15 +73,34 @@ function routeTo(path) {
   });
 }
 
+function childShouldHaveProps(renderedRoute, props) {
+  childShouldBePresent(renderedRoute);
+  const testInstance = renderedRoute.root;
+  expect(testInstance.findByType(Child).props).toEqual(props);
+}
+
+function childShouldBePresent(renderedRoute) {
+  const testInstance = renderedRoute.root;
+  expect(testInstance.findByType(Child)).toBeTruthy();
+}
+
+function childShouldBeAbsent(renderedRoute) {
+  const testInstance = renderedRoute.root;
+  expect(() => testInstance.findByType(Child)).toThrow();
+}
+
 function Child() {
   return <div>Child</div>;
 }
 
 function renderRouteWithPath(path) {
-  routeTo("/");
-  return TestRenderer.create(
-    <Route path={path}>
-      <Child />
-    </Route>
-  );
+  let renderedRoute;
+  act(() => {
+    renderedRoute = TestRenderer.create(
+      <Route path={path}>
+        <Child />
+      </Route>
+    );
+  });
+  return renderedRoute;
 }
