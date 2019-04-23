@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Route } from "naive-router";
 import Header from "./Header";
 
@@ -10,23 +10,35 @@ function Lol({ name }) {
   return <div>Query parameter: name={name}</div>;
 }
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <Header />
-        <Route path="/foo">
-          <div>Hello from basic route</div>
-        </Route>
-        <Route path="/bar/{id}">
-          <Foo />
-        </Route>
-        <Route path="/lol">
-          <Lol />
-        </Route>
-      </div>
-    );
-  }
+export default function App() {
+  const [lastRoute, setLastRoute] = useState(true);
+  const [allRoutes, setAllRoutes] = useState(true);
+  return (
+    <div className="App">
+      <Header />
+      {allRoutes && (
+        <>
+          <Route path="/foo">
+            <div>Hello from basic route</div>
+          </Route>
+          <Route path="/bar/{id}">
+            <Foo />
+          </Route>
+          {lastRoute && (
+            <Route path="/lol">
+              <Lol />
+            </Route>
+          )}
+        </>
+      )}
+      <br />
+      <button onClick={() => setLastRoute(!lastRoute)}>
+        Toggle last route
+      </button>
+      <br />
+      <button onClick={() => setAllRoutes(!allRoutes)}>
+        Toggle all routes
+      </button>
+    </div>
+  );
 }
-
-export default App;
