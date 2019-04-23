@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "NODE_ENV=production rollup -c -o dist/naive-router.js",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^9.0.0",
     "babel-jest": "^24.7.1",
+    "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "eslint-config-react-app": "^3.0.8",
     "eslint-plugin-flowtype": "^2.50.3",

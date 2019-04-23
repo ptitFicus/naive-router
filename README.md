@@ -1,6 +1,7 @@
 # naive-router
 
 [![Build Status](https://travis-ci.com/ptitFicus/naive-router.svg?branch=master)](https://travis-ci.com/ptitFicus/naive-router)
+[![Coverage Status](https://coveralls.io/repos/github/ptitFicus/naive-router/badge.svg?branch=coveralls)](https://coveralls.io/github/ptitFicus/naive-router?branch=coveralls)
 
 Super naive dependency free router for React
 
