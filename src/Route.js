@@ -3,7 +3,6 @@ import match from "./matcher/index.js";
 
 function Route({ path, children }) {
   const initRef = useRef({ init: false });
-  const [state, setState] = useState(Symbol()); // eslint-disable-line no-unused-vars
   const [displayed, setDisplayed] = useState(false);
   const [params, setParams] = useState({});
 
