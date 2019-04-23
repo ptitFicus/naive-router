@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import match from "./matcher/index.js";
+import EventQueue from "./EventQueue";
 
 const monkeyPatchSymbol = Symbol();
 
@@ -60,28 +61,6 @@ function extractQueryParams() {
   }
 
   return res;
-}
-
-class EventQueue {
-  constructor() {
-    this.queue = [];
-  }
-
-  suscribe(callback) {
-    this.queue.push(callback);
-  }
-
-  unsuscribe(callback) {
-    const index = this.queue.indexOf(callback);
-    if (index === -1) {
-      return;
-    }
-    this.queue.splice(index, 1);
-  }
-
-  broadcast() {
-    this.queue.forEach(callback => callback());
-  }
 }
 
 const proxify = callback => name => {
