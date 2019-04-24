@@ -1,5 +1,6 @@
 # naive-router
 
+[![npm version](https://badge.fury.io/js/naive-router.svg)](https://badge.fury.io/js/naive-router)
 [![Build Status](https://travis-ci.com/ptitFicus/naive-router.svg?branch=master)](https://travis-ci.com/ptitFicus/naive-router)
 [![Coverage Status](https://coveralls.io/repos/github/ptitFicus/naive-router/badge.svg?branch=master)](https://coveralls.io/github/ptitFicus/naive-router?branch=master)
 
