@@ -8,7 +8,9 @@ Super naive dependency free router for React
 
 ## Usage
 
-This library expose a single `Route` component that will display its children if an only if its prop `path` is matched by the current browser route.
+This library expose a single `Route` component.
+
+A `Route` will display its children if an only current browser route matches its `path` prop.
 
 ### Route matching without parameters
 
@@ -27,17 +29,19 @@ const Child = ({id}) => <div>Matched route "/foo/{id}" with {id}</div>
 </Route>
 ```
 
-## Pitfall
+## Pitfalls
 
-This libray comes with some pitfalls :
+This library comes with some pitfalls :
 
-- It alterates the global `window` object by adding it a new property. However, since this property is defined using `Symbol()`, collision is impossible.
-- It also monkeypatch `window.history` methods : `pushState`, `go`, `back`, `replaceState` and `forward` to broadcats any location change to every `Route` component.
-- Several `Route` components could match a given url (for instance both `/foo/bar` and `/foo/{id}` match route `/foo/bar`). You should think aboute the `Route` component as a conditionnal display of its children based on the route.
-- Since path params and query params are passed directly as props to child components, there is a risk of name conflict. The priority order is : 1) path params 2) query params 3) props
+- It add a new property to the  the global `window` object. But, since this property key is a `Symbol()`, collision is impossible.
+- It also monkey-patch `window.history` methods : `pushState`, `go`, `back`, `replaceState` and `forward` to broadcats any location change to every `Route` component.
+- `Route` components pass path and query  parameters as props to child components. Thus there is a risk of name conflict. The priority order is : 1) path  parameters 2) query  parameters 3) props
+- Several `Route` components could match a given url (for instance both `/foo/bar` and `/foo/{id}` match route `/foo/bar`). You should think about the `Route` component as a conditional display of its children based on the route.
+- It's currently not possible to display a default component when no no route is  matched. Thus a 404 Route is not possible.
 
 ## Features
 
 - [x] Route matching
 - [x] Path parameters support
 - [x] Query parameters support
+- [ ] 404 Route
