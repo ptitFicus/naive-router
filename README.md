@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/naive-router.svg)](https://badge.fury.io/js/naive-router)
 [![Build Status](https://travis-ci.com/ptitFicus/naive-router.svg?branch=master)](https://travis-ci.com/ptitFicus/naive-router)
-[![Coverage Status](https://coveralls.io/repos/github/ptitFicus/naive-router/badge.svg?branch=master)](https://coveralls.io/github/ptitFicus/naive-router?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/ptitFicus/naive-router/badge.svg?branch=master)](https://coveralls.io/github/ptitFicus/naive-router?branch=master) [![npm bundle size](https://img.shields.io/bundlephobia/minzip/naive-router.svg)](https://bundlephobia.com/result?p=naive-router)
 
 Super naive dependency free router for React
 
