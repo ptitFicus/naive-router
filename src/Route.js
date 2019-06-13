@@ -7,7 +7,8 @@ const monkeyPatchSymbol = Symbol();
 function Route({ path, children }) {
   const ref = useRef({});
   const [displayed, setDisplayed] = useState(false);
-  const [params, setParams] = useState({});
+  const [queryParams, setQueryParams] = useState({});
+  const [pathParams, setPathParams] = useState({});
 
   useEffect(() => {
     ref.current.path = path;
@@ -33,7 +34,8 @@ function Route({ path, children }) {
       const matchedRoute = match(path, currentPath);
       if (matchedRoute && !displayed) {
         setDisplayed(true);
-        setParams({ ...extractQueryParams(), ...matchedRoute });
+        setQueryParams(extractQueryParams());
+        setPathParams(matchedRoute);
       } else if (!matchedRoute && displayed) {
         setDisplayed(false);
       }
@@ -48,6 +50,11 @@ function Route({ path, children }) {
     };
   }, []);
 
+  if (isFunction(children)) {
+    return displayed ? children(pathParams, queryParams) : null;
+  }
+
+  const params = { ...queryParams, ...pathParams };
   return displayed
     ? React.Children.map(children, child => React.cloneElement(child, params))
     : null;
@@ -72,4 +79,15 @@ const proxify = callback => name => {
   };
 };
 
+const getTypeOf = something => {
+  const getType = {};
+  return something && getType.toString.call(something);
+};
+
+const isFunction = functionToCheck => {
+  const type = getTypeOf(functionToCheck);
+  return type && type === "[object Function]";
+};
+
 export default Route;
+export { monkeyPatchSymbol };

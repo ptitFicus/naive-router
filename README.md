@@ -29,15 +29,27 @@ const Child = ({id}) => <div>Matched route "/foo/{id}" with {id}</div>
 </Route>
 ```
 
+### Route with render function as a child
+
+Child of the route component can be a render function.
+This function will be invoked with two arguments : path and query parameters.
+
+```jsx
+const Child = ({id}) => <div>Matched route "/foo/{id}" with {id}</div>
+<Route path="/foo/{id}">
+  {(pathParameters, queryParemeters) => <div>{pathParameters.id} {queryParameters.id}</div>}
+</Route>
+```
+
 ## Pitfalls
 
 This library comes with some pitfalls :
 
-- It add a new property to the  the global `window` object. But, since this property key is a `Symbol()`, collision is impossible.
+- It add a new property to the the global `window` object. But, since this property key is a `Symbol()`, collision is impossible.
 - It also monkey-patch `window.history` methods : `pushState`, `go`, `back`, `replaceState` and `forward` to broadcats any location change to every `Route` component.
-- `Route` components pass path and query  parameters as props to child components. Thus there is a risk of name conflict. The priority order is : 1) path  parameters 2) query  parameters 3) props
+- `Route` components pass path and query parameters as props to child components. Thus there is a risk of name conflict. The priority order is : 1) path parameters 2) query parameters 3) props. Passing a render function as a children to the Route component solve this issue.
 - Several `Route` components could match a given url (for instance both `/foo/bar` and `/foo/{id}` match route `/foo/bar`). You should think about the `Route` component as a conditional display of its children based on the route.
-- It's currently not possible to display a default component when no no route is  matched. Thus a 404 Route is not possible.
+- It's currently not possible to display a default component when no no route is matched. Thus a 404 Route is not possible.
 
 ## Features
 

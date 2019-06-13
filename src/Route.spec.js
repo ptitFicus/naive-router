@@ -67,6 +67,19 @@ test("should hide component when route is matched brefore back() is called", () 
   childShouldBePresent(renderedRoute);
 });
 
+test("should pass all props when render function is used as a child", () => {
+  const renderFunc = jest
+    .fn()
+    .mockImplementation(() => <div>Hello render prop</div>);
+  renderFunctionChildWithPath(renderFunc, "/foo/{name}");
+
+  routeTo("/foo/pathName?name=queryName");
+  expect(renderFunc).toHaveBeenCalledWith(
+    { name: "pathName" },
+    { name: "queryName" }
+  );
+});
+
 function routeTo(path) {
   act(() => {
     window.history.pushState({}, null, path);
@@ -101,6 +114,14 @@ function renderRouteWithPath(path) {
         <Child />
       </Route>
     );
+  });
+  return renderedRoute;
+}
+
+function renderFunctionChildWithPath(func, path) {
+  let renderedRoute;
+  act(() => {
+    renderedRoute = TestRenderer.create(<Route path={path}>{func}</Route>);
   });
   return renderedRoute;
 }

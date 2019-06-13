@@ -50,12 +50,35 @@ function extractParts(path) {
   return path.split("/").filter(str => str.length > 0);
 }
 
+class EventQueue {
+  constructor() {
+    this.queue = [];
+  }
+
+  suscribe(callback) {
+    this.queue.push(callback);
+  }
+
+  unsuscribe(callback) {
+    const index = this.queue.indexOf(callback);
+    if (index === -1) {
+      return;
+    }
+    this.queue.splice(index, 1);
+  }
+
+  broadcast() {
+    this.queue.forEach(callback => callback());
+  }
+}
+
 const monkeyPatchSymbol = Symbol();
 
 function Route({ path, children }) {
   const ref = useRef({});
   const [displayed, setDisplayed] = useState(false);
-  const [params, setParams] = useState({});
+  const [queryParams, setQueryParams] = useState({});
+  const [pathParams, setPathParams] = useState({});
 
   useEffect(() => {
     ref.current.path = path;
@@ -81,7 +104,8 @@ function Route({ path, children }) {
       const matchedRoute = match(path, currentPath);
       if (matchedRoute && !displayed) {
         setDisplayed(true);
-        setParams({ ...extractQueryParams(), ...matchedRoute });
+        setQueryParams(extractQueryParams());
+        setPathParams(matchedRoute);
       } else if (!matchedRoute && displayed) {
         setDisplayed(false);
       }
@@ -96,6 +120,11 @@ function Route({ path, children }) {
     };
   }, []);
 
+  if (isFunction(children)) {
+    return displayed ? children(pathParams, queryParams) : null;
+  }
+
+  const params = { ...queryParams, ...pathParams };
   return displayed
     ? React.Children.map(children, child => React.cloneElement(child, params))
     : null;
@@ -111,28 +140,6 @@ function extractQueryParams() {
   return res;
 }
 
-class EventQueue {
-  constructor() {
-    this.queue = [];
-  }
-
-  suscribe(callback) {
-    this.queue.push(callback);
-  }
-
-  unsuscribe(callback) {
-    const index = this.queue.indexOf(callback);
-    if (index === -1) {
-      return;
-    }
-    this.queue.splice(index, 1);
-  }
-
-  broadcast() {
-    this.queue.forEach(callback => callback());
-  }
-}
-
 const proxify = callback => name => {
   const callbackSymbol = Symbol();
   window.history[callbackSymbol] = window.history[name];
@@ -140,6 +147,16 @@ const proxify = callback => name => {
     window.history[callbackSymbol](...args);
     callback();
   };
+};
+
+const getTypeOf = something => {
+  const getType = {};
+  return something && getType.toString.call(something);
+};
+
+const isFunction = functionToCheck => {
+  const type = getTypeOf(functionToCheck);
+  return type && type === "[object Function]";
 };
 
 export { Route };
