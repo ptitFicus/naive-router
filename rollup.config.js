@@ -1,4 +1,5 @@
-// rollup.config.js
+import { terser } from "rollup-plugin-terser";
+
 const config = {
   input: "src/index.js",
   external: ["react"],
@@ -9,6 +10,7 @@ const config = {
     globals: {
       react: "React"
     }
-  }
+  },
+  plugins: [terser()]
 };
 export default config;
