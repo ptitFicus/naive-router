@@ -1,44 +1,47 @@
-import React, { useState } from "react";
-import { Route } from "naive-router";
-import Header from "./Header";
+import React from "react";
+import { Route, NotFound } from "naive-router";
 
-function Foo({ id }) {
+function PathParamExemple({ id }) {
   return <div>Path parameter: id={id}</div>;
 }
 
-function Lol({ name }) {
+function QueryParamExemple({ name }) {
   return <div>Query parameter: name={name}</div>;
 }
 
 export default function App() {
-  const [lastRoute, setLastRoute] = useState(true);
-  const [allRoutes, setAllRoutes] = useState(true);
   return (
     <div className="App">
-      <Header />
-      {allRoutes && (
-        <>
-          <Route path="/foo">
-            <div>Hello from basic route</div>
-          </Route>
-          <Route path="/bar/{id}">
-            <Foo />
-          </Route>
-          {lastRoute && (
-            <Route path="/lol">
-              <Lol />
-            </Route>
-          )}
-        </>
-      )}
-      <br />
-      <button onClick={() => setLastRoute(!lastRoute)}>
-        Toggle last route
+      <button onClick={() => window.history.pushState({}, null, "/base")}>
+        Basic Path
       </button>
-      <br />
-      <button onClick={() => setAllRoutes(!allRoutes)}>
-        Toggle all routes
+      <button
+        onClick={() => window.history.pushState({}, null, "/pathParam/1")}
+      >
+        Route with path parameter
       </button>
+      <button
+        onClick={() =>
+          window.history.pushState({}, null, "/queryParam?name=john")
+        }
+      >
+        Route with query parameter
+      </button>
+      <button onClick={() => window.history.pushState({}, null, "/lost")}>
+        Not found
+      </button>
+      <Route path="/base">
+        <div>Hello from basic route</div>
+      </Route>
+      <Route path="/pathParam/{id}">
+        <PathParamExemple />
+      </Route>
+      <Route path="/queryParam">
+        <QueryParamExemple />
+      </Route>
+      <NotFound>
+        <div>Not found !</div>
+      </NotFound>
     </div>
   );
 }

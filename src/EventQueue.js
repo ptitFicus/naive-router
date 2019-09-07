@@ -1,15 +1,24 @@
 class EventQueue {
   constructor() {
-    this.notFound = false;
+    this.notFound = true;
     this.queue = [];
     this.notFoundQueue = [];
   }
 
   suscribe(callback) {
+    const matched = callback();
+
+    if (matched) {
+      if (this.notFound) {
+        this.hideNotFoundRoutes();
+      }
+      this.notFound = false;
+    }
     this.queue.push(callback);
   }
 
   suscribeNotFound(callback) {
+    callback(!this.notFound);
     this.notFoundQueue.push(callback);
   }
 

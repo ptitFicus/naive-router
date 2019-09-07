@@ -46,7 +46,7 @@ function routeFactory(notFound) {
       }
 
       window.addEventListener("popstate", updateCallback);
-      updateCallback();
+
       return () => {
         window[monkeyPatchSymbol].unsuscribe(updateCallback);
         window.removeEventListener("popstate", updateCallback);
@@ -58,6 +58,7 @@ function routeFactory(notFound) {
     }
 
     const params = { ...queryParams, ...pathParams };
+
     return displayed
       ? React.Children.map(children, child => React.cloneElement(child, params))
       : null;
