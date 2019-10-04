@@ -1,6 +1,10 @@
 {
   "name": "naive-router",
+<<<<<<< HEAD
   "version": "1.6.4",
+=======
+  "version": "1.6.2",
+>>>>>>> chore: switch to yarn-workspace
   "description": "Naive client-side router for react applications",
   "main": "dist/naive-router.js",
   "scripts": {
