@@ -12,7 +12,7 @@ function QueryParamExemple({ name }) {
 export default function App() {
   return (
     <div className="App">
-      <button onClick={() => window.history.pushState({}, null, "/base")}>
+      <button onClick={() => window.history.pushState({}, null, "/")}>
         Basic Path
       </button>
       <button
@@ -30,7 +30,10 @@ export default function App() {
       <button onClick={() => window.history.pushState({}, null, "/lost")}>
         Not found
       </button>
-      <Route path="/base">
+      <NotFound>
+        <div>Not found !</div>
+      </NotFound>
+      <Route path="/">
         <div>Hello from basic route</div>
       </Route>
       <Route path="/pathParam/{id}">
@@ -39,9 +42,6 @@ export default function App() {
       <Route path="/queryParam">
         <QueryParamExemple />
       </Route>
-      <NotFound>
-        <div>Not found !</div>
-      </NotFound>
     </div>
   );
 }
