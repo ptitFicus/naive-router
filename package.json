@@ -1,6 +1,6 @@
 {
   "name": "naive-router",
-  "version": "1.6.1",
+  "version": "1.6.3",
   "description": "Naive client-side router for react applications",
   "main": "dist/naive-router.js",
   "scripts": {

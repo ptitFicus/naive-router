@@ -3,23 +3,31 @@ class EventQueue {
     this.notFound = true;
     this.queue = [];
     this.notFoundQueue = [];
+    this.callbackScheduled = false;
   }
 
   suscribe(callback) {
-    const matched = callback();
-
-    if (matched) {
-      if (this.notFound) {
-        this.hideNotFoundRoutes();
-      }
-      this.notFound = false;
-    }
     this.queue.push(callback);
+    if (!this.callbackScheduled) {
+      this.callbackScheduled = true;
+      this.scheduleBroadcast();
+    }
   }
 
   suscribeNotFound(callback) {
-    callback(!this.notFound);
     this.notFoundQueue.push(callback);
+
+    if (!this.callbackScheduled) {
+      this.callbackScheduled = true;
+      this.scheduleBroadcast();
+    }
+  }
+
+  scheduleBroadcast() {
+    Promise.resolve().then(() => {
+      this.broadcast();
+      this.callbackScheduled = false;
+    });
   }
 
   unsuscribe(callback) {
