@@ -7,9 +7,9 @@ const monkeyPatchSymbol = Symbol();
 function routeFactory(notFound) {
   return function Route({ path, children }) {
     const ref = useRef({});
-    const [displayed, setDisplayed] = useState(false);
-    const [queryParams, setQueryParams] = useState({});
-    const [pathParams, setPathParams] = useState({});
+    const [{ displayed, queryParams, pathParams }, setDisplayInfo] = useState({
+      displayed: false
+    });
 
     useEffect(() => {
       ref.current.path = path;
@@ -30,11 +30,13 @@ function routeFactory(notFound) {
         }
 
         if (matchedRoute && !displayed) {
-          setDisplayed(true);
-          setQueryParams(extractQueryParams());
-          setPathParams(matchedRoute);
+          setDisplayInfo({
+            displayed: true,
+            queryParams: extractQueryParams(),
+            pathParams: matchedRoute
+          });
         } else if (!matchedRoute && displayed) {
-          setDisplayed(false);
+          setDisplayInfo({ displayed: false });
         }
         return !!matchedRoute;
       };
