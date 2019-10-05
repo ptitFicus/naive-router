@@ -49,6 +49,15 @@ test("path params should prevail over query param ", () => {
   });
 });
 
+test("params update should trigger component update", () => {
+  const renderedRoute = renderRouteWithPath("/foo");
+
+  routeTo("/foo?name=aaa");
+  expect(renderedRoute.root.findByType("div").children[0]).toBe("aaa");
+  routeTo("/foo?name=bbb");
+  expect(renderedRoute.root.findByType("div").children[0]).toBe("bbb");
+});
+
 test("should hide component when route is matched then unmatched", () => {
   const renderedRoute = renderRouteWithPath("/foo");
 
@@ -139,8 +148,8 @@ function notFoundChildShouldBeAbsent(renderedRoute) {
   expect(() => testInstance.findByType(NotFoundChild)).toThrow();
 }
 
-function Child() {
-  return <div>Child</div>;
+function Child({ name }) {
+  return <div>{name}</div>;
 }
 
 function NotFoundChild() {
