@@ -1,2 +1,2 @@
-import Route from "./Route.js";
-export { Route };
+import { Route, NotFound } from "./Route.js";
+export { Route, NotFound };

@@ -1,22 +1,69 @@
 class EventQueue {
   constructor() {
+    this.notFound = true;
     this.queue = [];
+    this.notFoundQueue = [];
+    this.callbackScheduled = false;
   }
 
   suscribe(callback) {
     this.queue.push(callback);
+    if (!this.callbackScheduled) {
+      this.callbackScheduled = true;
+      this.scheduleBroadcast();
+    }
+  }
+
+  suscribeNotFound(callback) {
+    this.notFoundQueue.push(callback);
+
+    if (!this.callbackScheduled) {
+      this.callbackScheduled = true;
+      this.scheduleBroadcast();
+    }
+  }
+
+  scheduleBroadcast() {
+    Promise.resolve().then(() => {
+      this.broadcast();
+      this.callbackScheduled = false;
+    });
   }
 
   unsuscribe(callback) {
-    const index = this.queue.indexOf(callback);
+    this._unsuscribe(callback, this.queue);
+    this._unsuscribe(callback, this.notFoundQueue);
+  }
+
+  _unsuscribe(callback, queue) {
+    const index = queue.indexOf(callback);
     if (index === -1) {
       return;
     }
-    this.queue.splice(index, 1);
+    queue.splice(index, 1);
   }
 
   broadcast() {
-    this.queue.forEach(callback => callback());
+    const routeMatched = this.queue.reduce(
+      (acc, nextCallback) => nextCallback() || acc,
+      false
+    );
+
+    if (!routeMatched) {
+      this.notFound = true;
+      this.displayNotFoundRoutes();
+    } else if (this.notFound) {
+      this.notFound = false;
+      this.hideNotFoundRoutes();
+    }
+  }
+
+  hideNotFoundRoutes() {
+    this.notFoundQueue.forEach(callback => callback(true));
+  }
+
+  displayNotFoundRoutes() {
+    this.notFoundQueue.forEach(callback => callback(false));
   }
 }
 

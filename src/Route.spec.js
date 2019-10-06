@@ -1,6 +1,6 @@
 import React from "react";
 import TestRenderer, { act } from "react-test-renderer";
-import Route from "./Route";
+import { Route, NotFound } from "./Route";
 
 test("should not display component when route is not matched", () => {
   const renderedRoute = renderRouteWithPath("/foo");
@@ -80,6 +80,33 @@ test("should pass all props when render function is used as a child", () => {
   );
 });
 
+test("should display NotFound route if path is not found", () => {
+  const rendered = renderRouteAndNotFoundRoot("/foo");
+
+  routeTo("/lol");
+  childShouldBeAbsent(rendered);
+  notFoundChildShouldBePresent(rendered);
+});
+
+test("should not display NotFound route if path is found", () => {
+  const rendered = renderRouteAndNotFoundRoot("/foo");
+
+  routeTo("/foo");
+  notFoundChildShouldBeAbsent(rendered);
+  childShouldBePresent(rendered);
+});
+
+test("should hide NotFound route as soon as another route is matched", () => {
+  const rendered = renderRouteAndNotFoundRoot("/foo");
+
+  routeTo("/lol");
+  childShouldBeAbsent(rendered);
+  notFoundChildShouldBePresent(rendered);
+  routeTo("/foo");
+  notFoundChildShouldBeAbsent(rendered);
+  childShouldBePresent(rendered);
+});
+
 function routeTo(path) {
   act(() => {
     window.history.pushState({}, null, path);
@@ -97,13 +124,27 @@ function childShouldBePresent(renderedRoute) {
   expect(testInstance.findByType(Child)).toBeTruthy();
 }
 
+function notFoundChildShouldBePresent(renderedRoute) {
+  const testInstance = renderedRoute.root;
+  expect(testInstance.findByType(NotFoundChild)).toBeTruthy();
+}
+
 function childShouldBeAbsent(renderedRoute) {
   const testInstance = renderedRoute.root;
   expect(() => testInstance.findByType(Child)).toThrow();
 }
 
+function notFoundChildShouldBeAbsent(renderedRoute) {
+  const testInstance = renderedRoute.root;
+  expect(() => testInstance.findByType(NotFoundChild)).toThrow();
+}
+
 function Child() {
   return <div>Child</div>;
+}
+
+function NotFoundChild() {
+  return <div>Not found</div>;
 }
 
 function renderRouteWithPath(path) {
@@ -113,6 +154,23 @@ function renderRouteWithPath(path) {
       <Route path={path}>
         <Child />
       </Route>
+    );
+  });
+  return renderedRoute;
+}
+
+function renderRouteAndNotFoundRoot(path) {
+  let renderedRoute;
+  act(() => {
+    renderedRoute = TestRenderer.create(
+      <>
+        <Route path={path}>
+          <Child />
+        </Route>
+        <NotFound>
+          <NotFoundChild />
+        </NotFound>
+      </>
     );
   });
   return renderedRoute;

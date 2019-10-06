@@ -41,6 +41,25 @@ const Child = ({id}) => <div>Matched route "/foo/{id}" with {id}</div>
 </Route>
 ```
 
+### NotFound route
+
+It's possible to display a special route when no `Route` component has been matched.
+
+```jsx
+const Child = ({id}) => <div>Matched route "/foo/{id}" with {id}</div>
+<>
+  <Route path="/foo/{id}">
+    {(pathParameters, queryParemeters) => <div>{pathParameters.id} {queryParameters.id}</div>}
+  </Route>
+  <NotFound>
+    <div>Not found !</div>
+  </NotFound>
+</>
+```
+
+As for `Route` component, it's possible to have more than one `NotFound` component.
+Each one of them will be display when no `Route` is matched.
+
 ## Pitfalls
 
 This library comes with some pitfalls :
@@ -48,12 +67,11 @@ This library comes with some pitfalls :
 - It add a new property to the the global `window` object. But, since this property key is a `Symbol()`, collision is impossible.
 - It also monkey-patch `window.history` methods : `pushState`, `go`, `back`, `replaceState` and `forward` to broadcats any location change to every `Route` component.
 - `Route` components pass path and query parameters as props to child components. Thus there is a risk of name conflict. The priority order is : 1) path parameters 2) query parameters 3) props. Passing a render function as a children to the Route component solve this issue.
-- Several `Route` components could match a given url (for instance both `/foo/bar` matches routes `/foo/bar` __and__ `/foo/{id}`). You should think about the `Route` component as a conditional display of its children based on the route.
-- It's currently not possible to display a default component when no no route is matched. Thus a 404 Route is not possible.
+- Several `Route` components could match a given url (for instance both `/foo/bar` matches routes `/foo/bar` **and** `/foo/{id}`). You should think about the `Route` component as a conditional display of its children based on the route.
 
 ## Features
 
 - [x] Route matching
 - [x] Path parameters support
 - [x] Query parameters support
-- [ ] 404 Route
+- [x] 404 Route
