@@ -4,7 +4,8 @@ node_js:
   - "node"
   - "lts/*"
 install:
-  - npm install
+  - yarn install
+before_script: cd naive-router
 script:
   - npm run lint
   - npm test
