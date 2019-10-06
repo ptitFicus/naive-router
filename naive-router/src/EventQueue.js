@@ -67,4 +67,25 @@ class EventQueue {
   }
 }
 
-export default EventQueue;
+const proxify = callback => name => {
+  const callbackSymbol = Symbol();
+  window.history[callbackSymbol] = window.history[name];
+  window.history[name] = (...args) => {
+    window.history[callbackSymbol](...args);
+    callback();
+  };
+};
+
+const queue = new EventQueue();
+
+const doProxify = proxify(() => queue.broadcast());
+
+doProxify("pushState");
+doProxify("back");
+doProxify("forward");
+doProxify("go");
+doProxify("replaceState");
+
+window.addEventListener("popstate", () => queue.broadcast());
+
+export default queue;

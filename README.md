@@ -64,8 +64,7 @@ Each one of them will be display when no `Route` is matched.
 
 This library comes with some pitfalls :
 
-- It add a new property to the the global `window` object. But, since this property key is a `Symbol()`, collision is impossible.
-- It also monkey-patch `window.history` methods : `pushState`, `go`, `back`, `replaceState` and `forward` to broadcats any location change to every `Route` component.
+- It monkey-patch `window.history` methods : `pushState`, `go`, `back`, `replaceState` and `forward` to broadcats any location change to every `Route` component.
 - `Route` components pass path and query parameters as props to child components. Thus there is a risk of name conflict. The priority order is : 1) path parameters 2) query parameters 3) props. Passing a render function as a children to the Route component solve this issue.
 - Several `Route` components could match a given url (for instance both `/foo/bar` matches routes `/foo/bar` **and** `/foo/{id}`). You should think about the `Route` component as a conditional display of its children based on the route.
 
