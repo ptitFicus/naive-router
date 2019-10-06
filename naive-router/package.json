@@ -50,6 +50,6 @@
     "rollup-plugin-uglify": "^6.0.2"
   },
   "peerDependencies": {
-    "react": "^16.8.0"
+    "react": ">=16.8.0"
   }
 }
