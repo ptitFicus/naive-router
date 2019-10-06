@@ -3,7 +3,7 @@ import match from "./matcher/index.js";
 import queue from "./EventQueue";
 
 function routeFactory(notFound) {
-  return function Route({ path, children }) {
+  return function({ path, children }) {
     const ref = useRef({});
     const [{ displayed, queryParams, pathParams }, setDisplayInfo] = useState({
       displayed: false
@@ -81,6 +81,8 @@ const isFunction = functionToCheck => {
 };
 
 const Route = routeFactory(false);
+Route.displayName = "Route";
 const NotFound = routeFactory(true);
+NotFound.displayName = "NotFound";
 
 export { Route, NotFound };
