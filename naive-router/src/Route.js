@@ -29,7 +29,7 @@ function routeFactory(notFound) {
           matchedRoute = match(path, currentPath);
         }
 
-        if (matchedRoute && !displayed) {
+        if (matchedRoute) {
           setDisplayInfo({
             displayed: true,
             queryParams: extractQueryParams(),
