@@ -1,0 +1,6 @@
+node_modules/
+src/
+.eslintrc.json
+.gitignore
+babel.config.js
+rollup.config.js
