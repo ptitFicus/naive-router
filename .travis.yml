@@ -1,8 +1,8 @@
 language: node_js
 sudo: false
 node_js:
-  - "node"
-  - "lts/*"
+  - node
+  - lts/*
 install:
   - yarn install
 before_script: cd naive-router
@@ -10,3 +10,13 @@ script:
   - npm run lint
   - npm test
   - npm run coveralls
+before_deploy: cd naive-router
+deploy:
+  provider: npm
+  email:
+    secure: "j9c2iuV94QLvKszCLWfrqOu5ZttbW8j2Avxb9JwUNmUOSusxPVk5quaCUqmpdMYhisDRInMENwq+DUN7ZECWzJwy0XyIMupX55RCYnX1/hrgQsqsmnmXyeKhyhO7gkKROcEKDpP8kY4T/aOpYA86TLaRJkopRRpTUwGw/YR4+8JrXq07v+FY4uSkA6fiJh+r/zsfnSznS7ol2Aydu6Cpo2KvcvHrk2u/yvkrze+ZbcoHR1RhHjJizTO3BUod+O9vRd3qDnDl8aLbBXteCUQi76cyfViSwZ+G8GLt5evk92JNEOwQ9MteyCUhi9y+oiB5792Hdfm4g3qVCXwvGwgvgzab7THh7cFHkSB5FBVXO+h3Oh4jSKcNoiSbNZNu61mpgR73UhTbmL8ZmkfHBz3WMITEVqpPSGeOXC4SDBPcCuKRHJ+JUN+W5vLEmFFeSHP8reJD5Ks1is7X+Ju2+OU4oAw8Qfil6kH1ditYsro82eCzSnrmmmG5qdkzAB0HsWKCPuy5MfL/kuGnE/GTeNS+zRdsByDSxm0DFgyXsemI3MtiTvjpzJKmaEDGTTbVel7hnuI0tsQB6dv0xCcgohUcUty6VamCzXbPTtPmiaIFR0Ubut1lCFTVOwLeLsJT1UkskGNP1/hh1nAuBueUXH9stRU07VBzqUj5OGCKff3ZQ34="
+  token:
+    secure: "RLog9bkz2ILWmFYsP18KX71wd6Vph9tPd1AY4vf1xC0iT+JndljTLdUOEbVZc1g1w2kX0CeABqt70JGhbWwTQkl4KbR9awciHjCVtlUFgirU8/1VRcw88P+9FVjEPUSFKxTKTm1lxDh/ZJI48FEBRxzX/rkcVI1d3EBFHCn43WESTljbav0DbaEADGozzj/N8y8pa5xPRNAiR7DQxT2oj5GlgUWuQURrnOYtWWJRWWJCm/8R/j2mEd/n5UDDhMGnD2Kts5fa5TQ/VjneYRW0w7nz/j96ePZ9XJTVpDUOCUihQZ1MTPpVDDs+6anTt2nvY+OIUbipmaPob4fdm7Yfz7w9H3op8XIkII63traqegfbESaDRObM2IeXpIsyY6rBe2FkN7lNo3GM9eI3kZkcmyDC2/nSmrM6heSfAZxbwcHBI6h0eH/wu7PMm/+5ukDGxH9mjCHKUym+FfYDE9u1BYtbQ0nU03Ap9NRNgFliAd53LIsyD/Fnl0gmEVlTgnKcOC+9UCqX/nCpG+JzaUd3OdQQ8kKZPixFORBoRuCAAy4Ou0/tCdZBLcm5BhiL8UVTIds3H3PtNI8TnnCAML1zjK3FusQwVtl5WVVmiySwlwx+qXiEDc9rFk3tAvFEWx/D+pXvipSDJT8UDEx+wvtPesZIX+ZSDQX1UF4Y6KUmdZs="
+  on:
+    branch: master
+    tags: true
