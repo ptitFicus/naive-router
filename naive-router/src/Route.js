@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import match from "./matcher/index.js";
-import EventQueue from "./EventQueue";
-
-const monkeyPatchSymbol = Symbol();
+import queue from "./EventQueue";
 
 function routeFactory(notFound) {
   return function Route({ path, children }) {
@@ -17,8 +15,6 @@ function routeFactory(notFound) {
     }, [path, displayed]);
 
     useEffect(() => {
-      setupIfNeeded();
-
       const updateCallback = anotherRouteMatched => {
         let matchedRoute = false;
         const { path, displayed } = ref.current;
@@ -42,16 +38,13 @@ function routeFactory(notFound) {
       };
 
       if (notFound) {
-        window[monkeyPatchSymbol].suscribeNotFound(updateCallback);
+        queue.suscribeNotFound(updateCallback);
       } else {
-        window[monkeyPatchSymbol].suscribe(updateCallback);
+        queue.suscribe(updateCallback);
       }
 
-      window.addEventListener("popstate", updateCallback);
-
       return () => {
-        window[monkeyPatchSymbol].unsuscribe(updateCallback);
-        window.removeEventListener("popstate", updateCallback);
+        queue.unsuscribe(updateCallback);
       };
     }, []);
 
@@ -77,15 +70,6 @@ function extractQueryParams() {
   return res;
 }
 
-const proxify = callback => name => {
-  const callbackSymbol = Symbol();
-  window.history[callbackSymbol] = window.history[name];
-  window.history[name] = (...args) => {
-    window.history[callbackSymbol](...args);
-    callback();
-  };
-};
-
 const getTypeOf = something => {
   const getType = {};
   return something && getType.toString.call(something);
@@ -96,21 +80,7 @@ const isFunction = functionToCheck => {
   return type && type === "[object Function]";
 };
 
-const setupIfNeeded = () => {
-  if (!window[monkeyPatchSymbol]) {
-    window[monkeyPatchSymbol] = new EventQueue();
-
-    const doProxify = proxify(() => window[monkeyPatchSymbol].broadcast());
-
-    doProxify("pushState");
-    doProxify("back");
-    doProxify("forward");
-    doProxify("go");
-    doProxify("replaceState");
-  }
-};
-
 const Route = routeFactory(false);
 const NotFound = routeFactory(true);
 
-export { monkeyPatchSymbol, Route, NotFound };
+export { Route, NotFound };
