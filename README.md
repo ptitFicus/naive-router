@@ -74,3 +74,4 @@ This library comes with some pitfalls :
 - [x] Path parameters support
 - [x] Query parameters support
 - [x] 404 Route
+- [ ] Nested routes
