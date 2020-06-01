@@ -8,13 +8,15 @@ Super naive dependency free router for React
 
 ## Usage
 
-This library expose a single `Route` component.
+This library two components : `Route` and `NotFound`.
 
 A `Route` will display its children if an only current browser route matches its `path` prop.
 
 ### Route matching without parameters
 
 ```jsx
+import { Route } from "naive-router";
+// ...
 <Route path="/foo/bar">
   <div>Matched /foo/bar route</div>
 </Route>
@@ -23,6 +25,8 @@ A `Route` will display its children if an only current browser route matches its
 ### Route matching with path paremeters
 
 ```jsx
+import { Route } from "naive-router";
+// ...
 const Child = ({id}) => <div>Matched route "/foo/{id}" with {id}</div>
 <Route path="/foo/{id}">
   <Child />
@@ -35,6 +39,8 @@ Child of the route component can be a render function.
 This function will be invoked with two arguments : path and query parameters.
 
 ```jsx
+import { Route } from "naive-router";
+// ...
 const Child = ({id}) => <div>Matched route "/foo/{id}" with {id}</div>
 <Route path="/foo/{id}">
   {(pathParameters, queryParemeters) => <div>{pathParameters.id} {queryParameters.id}</div>}
@@ -46,6 +52,8 @@ const Child = ({id}) => <div>Matched route "/foo/{id}" with {id}</div>
 It's possible to display a special route when no `Route` component has been matched.
 
 ```jsx
+import { Route, NotFound } from "naive-router";
+// ...
 const Child = ({id}) => <div>Matched route "/foo/{id}" with {id}</div>
 <>
   <Route path="/foo/{id}">
