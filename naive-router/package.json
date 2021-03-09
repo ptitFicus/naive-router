@@ -27,7 +27,7 @@
   "homepage": "https://github.com/ptitFicus/naive-router#readme",
   "devDependencies": {
     "@babel/core": "^7.6.4",
-    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-env": "^7.13.10",
     "@babel/preset-react": "^7.8.3",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^24.9.0",
